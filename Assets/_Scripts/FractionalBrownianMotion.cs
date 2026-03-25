@@ -1,19 +1,23 @@
+using System.Collections;
 using System.Net.NetworkInformation;
 using Unity.VisualScripting;
 using UnityEngine;
 
 public class FractionalBrownianMotion : MeshGen
 {
-    public Octave[] octaves;
-    public float baseFrequency, baseAmplitude;
-    public float lacunarity, gain;
+    [SerializeField]
+    public int octaves;
+    public float baseFrequency;
+    public float baseAmplitude;
     public bool regen;
     public int seed;
-    // I'm not sure what lacunarity is, but here it is from his talk. 
-    // Lacunarity, from the Latin lacuna, meaning "gap" or "lake", is a specialized term in geometry referring to a measure of how patterns, especially fractals, fill space, where patterns having more or larger gaps generally have higher lacunarity.
+    public float minHeight, maxHeight;
+    public float scale;
+    public float lacunarity = 2f, gain = 0.5f; 
 
     void Start()
     {
+        StartCoroutine(PrintDeltaTime());
         CreateMesh();
         seed = Random.Range(1, 1000000);
         ApplyNoise();
@@ -28,36 +32,63 @@ public class FractionalBrownianMotion : MeshGen
             verticies[vert] = vertice;
         }
     }
+    IEnumerator PrintDeltaTime()
+    {
+        Debug.Log("Delta time: " + Time.deltaTime);
+        yield return null;
+        Debug.Log("Delta time: " + Time.deltaTime);
+    }
     float GetNoiseAtPos(float x, float z)
     {
-        float sum = 0;
-        float frequency = baseFrequency, amplitude = baseAmplitude;
-
-        for(int i = 0; i < octaves.Length; i++)
-        {
-            float n = Mathf.PerlinNoise((seed + x) / frequency, (seed + z) / frequency);
-            sum += n * amplitude;
-            frequency *= lacunarity;
-            amplitude *= gain;
-        }
-
+        // float sum = 0;
+        // float frequency = baseFrequency, amplitude = baseAmplitude;
+        
+        // for(int i = 0; i < octaves.Length; i++)
+        
+        // { 
+        //     seed = Random.Range(0, 10000);
+        //     float n = Mathf.PerlinNoise((seed + x) / ( octaves[i].lacunarity / scale), (seed + z) / ( octaves[i].lacunarity / scale));
+        //     sum += n * octaves[i].gain;
+        //     // frequency *= octaves[i].lacunarity;
+        //     // amplitude *= octaves[i].gain;
+        // }
+       
+        float sum = Implement(x, z);
         return sum;
+    }
+
+    float Implement(float x, float z)
+    {
+        
+        float amplitude = maxHeight/2;
+        float frequency = 0.05f;
+        int octaves = this.octaves;
+
+        float elevation = amplitude;
+        float totalFrequency = frequency;
+        float totalAmplitude = amplitude;
+
+        for(int i = 0; i < octaves; i++)
+        {
+            float sampleX = x / scale * totalFrequency;
+            float sampleZ = z / scale * totalFrequency;
+            elevation += Mathf.PerlinNoise(sampleX, sampleZ) * totalAmplitude;
+            Debug.Log("Elevation: " + elevation);
+            totalFrequency *= lacunarity;
+            totalAmplitude *= gain;
+        }
+        // elevation = Mathf.Clamp(elevation, minHeight, maxHeight);
+        return elevation;
     }
 
     void Update()
     {
         if(regen)
         {
+            CreateMesh();
             ApplyNoise();
             UpdateMesh();
             regen = false;
         }
     }
-}
-
-
-[System.Serializable]
-public class Octave
-{
-    public float lacunarity, gain;
 }
