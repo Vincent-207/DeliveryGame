@@ -1,4 +1,5 @@
 using System.Linq;
+using Unity.Mathematics;
 using UnityEditor;
 using UnityEngine;
 
@@ -8,9 +9,15 @@ public class PerlinEditor : Editor
     PerlinGPU perlin;
     ComputeShader perlinNoise;
     int perlinNoiseHandle;
-    int resolution = 256;
+    int resolution = 64;
     public RenderTexture texture;
     private void OnEnable()
+    {
+        Generate();
+    }
+    
+
+    public void Generate()
     {
         perlin = (PerlinGPU)target;
         // is resolution being set as w and h?
@@ -27,6 +34,8 @@ public class PerlinEditor : Editor
         perlinNoiseHandle = perlinNoise.FindKernel("CSMain");
         perlinNoise.SetTexture(perlinNoiseHandle, "Result", texture);
         perlinNoise.SetFloat("res", (float) resolution);
+        perlinNoise.SetFloat("xOffset", perlin.transform.position.x);
+        perlinNoise.SetFloat("yOffset", perlin.transform.position.y);
         //perlinNoise.SetBuffer(perlinNoiseHandle, "gradients", gradients);
         perlinNoise.Dispatch(perlinNoiseHandle, resolution/8, resolution/8, 1);
 
@@ -36,10 +45,6 @@ public class PerlinEditor : Editor
         rend.sharedMaterial.SetTexture("_Texture2D", texture);
     }
 
-    private static Vector2 GetRandomDirection()
-    {
-        return new Vector2(Random.Range(-1.0f, 1.0f), Random.Range(-1.0f, 1.0f)).normalized;
-    }
     private void OnSceneGUI()
     {
         

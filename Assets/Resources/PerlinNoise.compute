@@ -3,7 +3,8 @@
 RWTexture2D<float4> Result;
 float scale;
 float res;
-
+float xOffset;
+float yOffset;
 
 float unity_gradientNoise( float2 p );
 float2 unity_gradientNoise_dir(float2 p);
@@ -19,7 +20,8 @@ void CSMain (uint3 id : SV_DispatchThreadID)
     scale = 8;
     float frequency = 8.5;
     float amplitude = 2;
-    Unity_GradientNoise_float(id.xy * frequency, 0.5, betterNoise);
+    float2 offset = float2(xOffset, yOffset);
+    Unity_GradientNoise_float((id.xy + offset) * frequency, 0.5, betterNoise);
 
     // Result[id.xy] = float4(id.x & id.y, (id.x & 15)/15.0, (id.y & 15)/15.0, 0.0);
     // Result[id.xy] = hash11(id.x);
