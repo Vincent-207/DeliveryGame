@@ -17,11 +17,18 @@ public class FractionalBrownianMotion : MeshGen
 
     void Start()
     {
-        StartCoroutine(PrintDeltaTime());
+        float startTime = Time.realtimeSinceStartup;
+        Debug.Log("Start time: " + Time.realtimeSinceStartup);
         CreateMesh();
+        float meshCreationTime = Time.realtimeSinceStartup - startTime;
+        Debug.Log("Mesh creation time: " + meshCreationTime);
         seed = Random.Range(1, 1000000);
         ApplyNoise();
+        float noiseTime = Time.realtimeSinceStartup - meshCreationTime;
+        Debug.Log("Noise application time: " + noiseTime);
         UpdateMesh();
+        float meshUpdateTime = Time.realtimeSinceStartup - noiseTime;
+        Debug.Log("Mesh update time: " + meshUpdateTime);
     }
     void ApplyNoise()
     {
@@ -73,7 +80,7 @@ public class FractionalBrownianMotion : MeshGen
             float sampleX = x / scale * totalFrequency;
             float sampleZ = z / scale * totalFrequency;
             elevation += Mathf.PerlinNoise(sampleX, sampleZ) * totalAmplitude;
-            Debug.Log("Elevation: " + elevation);
+            // Debug.Log("Elevation: " + elevation);
             totalFrequency *= lacunarity;
             totalAmplitude *= gain;
         }
