@@ -1,12 +1,15 @@
-Shader "Basics/Perlin"
+Shader "Terrain/FBM_Ridged"
 {
     Properties
     {
         _BaseColor("Base Color", Color) = (1, 1, 1, 1)
         _BaseTexture("Base Texture", 2D) = "white" {}
-        _Frequency("Frequency", Range(0.0, 64.0)) = 4.0
-        _Amplitude("Amplitude", Range(0.0, 32.0)) = 1.5
+        _BaseFrequency("Base Frequency", Range(0.0, 64.0)) = 4.0
+        _BaseAmplitude("Base Amplitude", Range(0.0, 128.0)) = 1.5
         _Scale("Scale", Float) = 0.5
+        _Octaves("Octaves", Range(0, 16)) = 8
+        _Lacunarity("Lacunarity", Range(0.0, 2.0)) = 2.0
+        _Gain("Gain", Float) = 0.5
     }
     SubShader
     {
@@ -36,9 +39,12 @@ Shader "Basics/Perlin"
             CBUFFER_START(UnityPerMaterial)
                 float4 _BaseColor;
                 float4 _BaseTexture_ST;
-                float _Frequency;
-                float _Amplitude;
+                float _BaseFrequency;
+                float _BaseAmplitude;
                 float _Scale;
+                int _Octaves;
+                float _Lacunarity;
+                float _Gain;
             CBUFFER_END
 
             TEXTURE2D(_BaseTexture);
@@ -46,7 +52,7 @@ Shader "Basics/Perlin"
             void Unity_GradientNoise_float(float2 UV, float Scale, out float Out);
             float2 unity_gradientNoise_dir(float2 p);
             float unity_gradientNoise( float2 p );
-
+            float FractalBrownianMotion(float2 uv);
             struct appdata
             {
                 float4 positionOS : POSITION;
@@ -66,18 +72,31 @@ Shader "Basics/Perlin"
                 float3 positionWS = TransformObjectToWorld(v.positionOS.xyz);
                 float2 positionWS2D = float2(positionWS.x, positionWS.z);
                 
-                float noise;
-                Unity_GradientNoise_float(v.uv / _Frequency, _Scale, noise);
-                positionWS.y = noise * _Amplitude;
+                float elevation = FractalBrownianMotion(v.uv);
+
+                positionWS.y = elevation;
 
                 o.positionCS = TransformWorldToHClip(positionWS);
                 o.uv = TRANSFORM_TEX(v.uv, _BaseTexture);
 
-
-                // o.positionCS = TransformObjectToHClip(v.positionOS.xyz);
-                // o.uv = TRANSFORM_TEX(v.uv, _BaseTexture);
-
                 return o;
+            }
+
+            float FractalBrownianMotion(float2 uv)
+            {
+                float sum = 0;
+                float freq = _BaseFrequency, amp = _BaseAmplitude;
+                for(int i = 0; i < _Octaves; i++)
+                {
+                    float noise;
+                    Unity_GradientNoise_float(uv / freq, _Scale,  noise);
+                    float adjustedNoise = -abs(noise -0.5);
+                    sum += adjustedNoise * amp;
+                    freq *= _Lacunarity;
+                    amp *= _Gain;
+                }
+
+                return sum;
             }
 
             float4 frag(v2f i) : SV_TARGET
