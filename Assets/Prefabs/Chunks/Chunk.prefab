@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &1387665270740164395
+--- !u!1 &8929901667124892675
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,47 +8,49 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 8606068474625523819}
-  - component: {fileID: 6535517731798117114}
-  - component: {fileID: 2005297704168573418}
-  - component: {fileID: 7041160605164850357}
+  - component: {fileID: 8379191931354013763}
+  - component: {fileID: 4414487255054558883}
+  - component: {fileID: 5587571200305907053}
+  - component: {fileID: 2399442290891523000}
+  - component: {fileID: 7705225862556390020}
+  - component: {fileID: 6240427891742966578}
   m_Layer: 0
-  m_Name: Plane (1)
+  m_Name: Chunk
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &8606068474625523819
+--- !u!4 &8379191931354013763
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1387665270740164395}
+  m_GameObject: {fileID: 8929901667124892675}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -978.6, y: 84, z: 74.8}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &6535517731798117114
+--- !u!33 &4414487255054558883
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1387665270740164395}
+  m_GameObject: {fileID: 8929901667124892675}
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
---- !u!23 &2005297704168573418
+--- !u!23 &5587571200305907053
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1387665270740164395}
+  m_GameObject: {fileID: 8929901667124892675}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -67,7 +69,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 02f6499618d7bb34387cf29462f3a13f, type: 2}
+  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -91,15 +93,67 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &7041160605164850357
+--- !u!64 &2399442290891523000
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8929901667124892675}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 0
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &7705225862556390020
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1387665270740164395}
+  m_GameObject: {fileID: 8929901667124892675}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f7e92feaf9b078e4cb72ff8b2b417539, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  sideLength: 0
+  seed: 0
+  pos: {x: 0, y: 0}
+  baseFrequency: 0
+  baseAmplitude: 0
+  scale: 60
+  lacunarity: 0
+  gain: 0
+--- !u!114 &6240427891742966578
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8929901667124892675}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b6b46f04eb6443a4e9c2e28f163e6f3c, type: 3}
+  m_Script: {fileID: 11500000, guid: 212a1a427e00afc42b6b5aa533b63563, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PerlinGPU
+  m_EditorClassIdentifier: Assembly-CSharp::FractionalBrownianMotion
+  sideLength: 10
+  octaves: 4
+  baseFrequency: 1.5
+  baseAmplitude: 24
+  regen: 0
+  seed: 0
+  scale: 128
+  lacunarity: 2
+  gain: 0.5
+  offset: {x: 0, y: 0}

@@ -30,13 +30,13 @@ Material:
     m_Ints: []
     m_Floats:
     - _Amplitude: 1.5
-    - _BaseAmplitude: 74.2
+    - _BaseAmplitude: 22.7
     - _BaseFrequency: 36.3
     - _Frequency: 4
     - _Gain: 0.49
     - _Lacunarity: 1.192
     - _Octaves: 3.92
-    - _Scale: 68.8
+    - _Scale: 238.6
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []

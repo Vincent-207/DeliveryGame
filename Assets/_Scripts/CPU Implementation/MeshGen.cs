@@ -11,12 +11,6 @@ public class MeshGen : MonoBehaviour
     internal int[] triangles;
     internal Mesh mesh;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-        CreateMesh();
-        
-    }
 
     internal void CreateMesh()
     {

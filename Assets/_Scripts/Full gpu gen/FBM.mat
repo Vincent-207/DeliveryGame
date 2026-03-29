@@ -102,7 +102,7 @@ Material:
     - _AddPrecomputedVelocity: 0
     - _AlphaClip: 0
     - _AlphaToMask: 0
-    - _BaseAmplitude: 86.9
+    - _BaseAmplitude: 90
     - _BaseFrequency: 64
     - _Blend: 0
     - _BlendModePreserveSpecular: 1
