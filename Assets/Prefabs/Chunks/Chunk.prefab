@@ -110,7 +110,7 @@ MeshCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30
@@ -148,12 +148,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FractionalBrownianMotion
   sideLength: 10
-  octaves: 4
-  baseFrequency: 1.5
-  baseAmplitude: 24
+  octaves: 8
+  baseFrequency: 128
+  baseAmplitude: 64
   regen: 0
   seed: 0
-  scale: 128
-  lacunarity: 2
+  scale: 1
+  lacunarity: 1.7
   gain: 0.5
   offset: {x: 0, y: 0}

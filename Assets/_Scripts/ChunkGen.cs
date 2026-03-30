@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using System.Xml.Serialization;
 using UnityEngine;
 
@@ -35,10 +36,27 @@ public class ChunkGen : MonoBehaviour
 
     void DestroyChildren()
     {
+        GameObject[] children = new GameObject[transform.childCount];
         for(int i = 0; i < transform.childCount; i++)
         {
-            Destroy(transform.GetChild(i).gameObject);
+            children[i] = transform.GetChild(i).gameObject;
         }
+        if(Application.isPlaying)
+        {
+            for(int i =0; i < children.Length; i++)
+            {
+                Destroy(children[i]);
+            }
+        }
+        else if(Application.isEditor)
+        {
+            for(int i = 0; i < children.Length; i++)
+            {
+                DestroyImmediate(children[i]);
+            }
+        }
+
+        
     }
 
     

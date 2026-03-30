@@ -27,6 +27,7 @@ public class MeshGen : MonoBehaviour
         mesh.vertices = verticies;
         mesh.triangles = triangles;
         mesh.RecalculateNormals();
+        GetComponent<MeshCollider>().sharedMesh = mesh;
     }
 
     int[] CreateTriangles()

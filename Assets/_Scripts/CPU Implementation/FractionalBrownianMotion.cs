@@ -37,7 +37,7 @@ public class FractionalBrownianMotion : MeshGen, IChunk
         CreateMesh();
         ApplyNoise();
         UpdateMesh();
-        UpdateMesh();
+        // UpdateMesh();
     }
     void ApplyNoise()
     {
@@ -56,7 +56,7 @@ public class FractionalBrownianMotion : MeshGen, IChunk
         yield return null;
         Debug.Log("Delta time: " + Time.deltaTime);
     }
-    float GetNoiseAtPos(Vector2 pos)
+    public float GetNoiseAtPos(Vector2 pos)
     {
         return GetNoiseAtPos(pos.x, pos.y);
     }
@@ -66,14 +66,13 @@ public class FractionalBrownianMotion : MeshGen, IChunk
         float frequency = baseFrequency;
 
         float sum  = 0;
-
+        Vector2 pos = new(x, z);
         for(int i = 0; i < octaves; i++)
         {
-            float sampleX = x / scale * frequency;
-            float sampleZ = z / scale * frequency;
-            sum += Mathf.PerlinNoise(sampleX, sampleZ) * amplitude;
+            Vector2 scaledPos = (pos / frequency) * scale;
+            sum += Mathf.PerlinNoise(scaledPos.x, scaledPos.y) * amplitude;
             // Debug.Log("Elevation: " + elevation);
-            frequency *= lacunarity;
+            frequency /= lacunarity;
             amplitude *= gain;
         }
         // elevation = Mathf.Clamp(elevation, minHeight, maxHeight);
