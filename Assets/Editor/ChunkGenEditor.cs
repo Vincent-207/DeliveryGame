@@ -12,6 +12,10 @@ public class ChunkGenEditor : Editor
         {
             chunkGen.Generate();
         }
+        if(GUILayout.Button("Clear"))
+        {
+            chunkGen.DestroyAllChildren();
+        }
 
     }
 }

@@ -6,7 +6,7 @@ using UnityEngine.Rendering;
 public class MeshGen : MonoBehaviour
 {
     public int sideLength;
-    MeshFilter meshFilter;
+    internal MeshFilter meshFilter;
     internal Vector3[] verticies;
     internal int[] triangles;
     internal Mesh mesh;
@@ -15,18 +15,19 @@ public class MeshGen : MonoBehaviour
     internal void CreateMesh()
     {
         meshFilter = GetComponent<MeshFilter>();
-        mesh = new();
-        meshFilter.mesh = mesh;
+        // mesh = new();
+        mesh = meshFilter.mesh;
         verticies = CreateVerticies(sideLength);
         triangles = CreateTriangles();
         UpdateMesh();
     }
     internal void UpdateMesh()
     {
-        mesh.Clear();
+        // mesh.Clear();
         mesh.vertices = verticies;
         mesh.triangles = triangles;
         mesh.RecalculateNormals();
+        mesh.RecalculateUVDistributionMetrics();
         GetComponent<MeshCollider>().sharedMesh = mesh;
     }
 

@@ -190,7 +190,7 @@ public class ChunkGen : MonoBehaviour
         Debug.Log("Time to gen: " + (Time.deltaTime * 1000f) );
     }
 
-    void DestroyAllChildren()
+    public void DestroyAllChildren()
     {
         GameObject[] children = new GameObject[transform.childCount];
         for(int i = 0; i < transform.childCount; i++)

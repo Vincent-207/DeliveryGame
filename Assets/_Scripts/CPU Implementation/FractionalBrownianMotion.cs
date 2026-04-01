@@ -34,9 +34,17 @@ public class FractionalBrownianMotion : MeshGen, IChunk
         // UpdateMesh();
         // float meshUpdateTime = Time.realtimeSinceStartup - noiseTime;
         // Debug.Log("Mesh update time: " + meshUpdateTime);
-        CreateMesh();
+        // CreateMesh();
+        meshFilter = GetComponent<MeshFilter>();
+        mesh = meshFilter.mesh;
+        verticies = mesh.vertices;
         ApplyNoise();
-        UpdateMesh();
+        mesh.vertices = verticies;
+        mesh.RecalculateBounds();
+        mesh.RecalculateNormals();
+        meshFilter.sharedMesh = mesh;
+        GetComponent<MeshCollider>().sharedMesh = mesh;
+        // UpdateMesh();
         // UpdateMesh();
     }
     void ApplyNoise()
@@ -47,6 +55,7 @@ public class FractionalBrownianMotion : MeshGen, IChunk
             float noise = GetNoiseAtPos(new(vertice.x + offset.x, vertice.z + offset.y));
             // Debug.Log("NOISE: " + noise);
             vertice.y = noise;
+            mesh.vertices[vert] = vertice;
             verticies[vert] = vertice;
         }
     }
