@@ -8,6 +8,7 @@ public class MeshGen : MonoBehaviour
     public int sideLength;
     internal MeshFilter meshFilter;
     internal Vector3[] verticies;
+    internal Vector2[] uvs;
     internal int[] triangles;
     internal Mesh mesh;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -15,17 +16,33 @@ public class MeshGen : MonoBehaviour
     internal void CreateMesh()
     {
         meshFilter = GetComponent<MeshFilter>();
-        // mesh = new();
-        mesh = meshFilter.mesh;
+        mesh = new();
+        // mesh = meshFilter.mesh;
         verticies = CreateVerticies(sideLength);
         triangles = CreateTriangles();
+        uvs = CreateUvs();
+
         UpdateMesh();
+    }
+    Vector2[] CreateUvs()
+    {
+        Vector2[] output = new Vector2[(sideLength +1) * (sideLength +1)];
+        for(int i =0, x = 0; x <= sideLength; x++)
+        {
+            for(int z = 0; z <= sideLength; z++)
+            {
+                output[i] = new Vector2(x, z);
+                i++;
+            }
+        }
+        return output;
     }
     internal void UpdateMesh()
     {
         // mesh.Clear();
         mesh.vertices = verticies;
         mesh.triangles = triangles;
+        mesh.uv = uvs;
         mesh.RecalculateNormals();
         mesh.RecalculateUVDistributionMetrics();
         GetComponent<MeshCollider>().sharedMesh = mesh;

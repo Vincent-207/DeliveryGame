@@ -32,7 +32,8 @@ public class ChunkGen : MonoBehaviour
         // Destroy chunks that are too far.
         // DestroyTooFar();
         // Spawn chunks that aren't close enough.
-        SpawnNewChunks();
+        // SpawnNewChunks();
+        Generate();
         DestroyTooFar();
         previousPos = player.position;
     }
@@ -173,9 +174,9 @@ public class ChunkGen : MonoBehaviour
     }
     public void Generate()
     {
-        // DestroyAllChildren();
         seed = Random.Range(0, 100000);
-        float starTime = Time.time;
+        // DestroyAllChildren();
+        float startTime = Time.time;
         
         for(int x = 0; x < mapLength; x++)
         {
@@ -185,7 +186,7 @@ public class ChunkGen : MonoBehaviour
             }
         }
 
-        float elapsed = Time.fixedUnscaledTime - starTime;
+        float elapsed = Time.fixedUnscaledTime - startTime;
         float ms = elapsed * 1000f;
         Debug.Log("Time to gen: " + (Time.deltaTime * 1000f) );
     }
