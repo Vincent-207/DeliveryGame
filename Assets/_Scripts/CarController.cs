@@ -37,6 +37,7 @@ public class CarController : MonoBehaviour
     void Update()
     {
         GetInputs();
+        AnimateWheels();
     }
     private void LateUpdate()
     {
@@ -61,7 +62,7 @@ public class CarController : MonoBehaviour
             {
                 var _steerAngle = input.x * turnSensitivity * maxSteerAngle;
                 float angle = wheel.wheelCollider.steerAngle = Mathf.Lerp(wheel.wheelCollider.steerAngle, _steerAngle, 0.6f);
-                wheel.wheelModel.transform.localRotation = Quaternion.Euler(0f, angle, 90f);
+                // wheel.wheelModel.transform.localRotation = Quaternion.Euler(0f, angle, 90f);
             }
         }
     }
@@ -71,6 +72,22 @@ public class CarController : MonoBehaviour
         {
             wheel.wheelCollider.motorTorque = input.y * maxAccel * Time.deltaTime;
 
+        }
+    }
+
+    void AnimateWheels()
+    {
+        foreach(var wheel in wheels)
+        {
+            wheel.wheelCollider.GetWorldPose(out Vector3 pos, out Quaternion rot);
+            Vector3 eulers = rot.eulerAngles;
+            // eulers.z = 90f;
+            wheel.wheelModel.transform.position = pos;
+            wheel.wheelModel.transform.rotation = Quaternion.Euler(eulers);
+            Vector3 localRot = wheel.wheelModel.transform.localRotation.eulerAngles;
+            localRot.y = 0;
+            // wheel.wheelModel.transform.localRotation = Quaternion.Euler(localRot);
+            // localRot
         }
     }
  }
