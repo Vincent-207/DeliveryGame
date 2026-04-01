@@ -24,6 +24,8 @@ public class ChunkGen : MonoBehaviour
         {
             chunks.Add(transform.GetChild(i).gameObject);
         }
+
+        loadedChunks ??= new();
     }
     void Update()
     {
@@ -48,16 +50,9 @@ public class ChunkGen : MonoBehaviour
             Vector3Int toGenDirection = playerChunk - previousChunk;
             toGenDirection /= 10;
             Debug.Log("New chunk! " + toGenDirection);
-            // Spawn new chunks
-
-            // Get player chunk pos:
-            // Get player relative pos:
             Vector3 playerRelativeToGridPos = transform.position - player.position;
-            //  convert relative pos to grid pos
             Vector3Int playerGridPos = posToChunkPos(playerRelativeToGridPos);
-            playerGridPos /= -10; // fix weird issue. 
-            // Debug.Log("current player grid: " + playerGridPos);
-            // Debug.Log("Next to gen: " + (playerGridPos + toGenDirection));
+            playerGridPos /= -10; 
             Vector3Int toGen = playerGridPos + toGenDirection * (mapLength/2);
             // toGen *= mapLength;
             GenerateChunkRow(toGen.x, toGen.z);
@@ -89,6 +84,12 @@ public class ChunkGen : MonoBehaviour
 
         }
     }
+    public Vector3Int posToChunkPos(Vector3 pos, out Vector2Int output)
+    {
+        Vector3Int gridPos = posToChunkPos(pos);
+        output = new (gridPos.x, gridPos.z);
+        return gridPos;
+    }
     public Vector3Int posToChunkPos(Vector3 pos)
     {
         // convert world pos to chunk pos. 
@@ -98,17 +99,27 @@ public class ChunkGen : MonoBehaviour
         return chunkPos;
     }
 
-    bool chunkAtPos(int x, int z)
+    bool IsChunkLoaded(int x, int z)
     {
-        foreach(GameObject chunk in chunks)
-        {
-            if(chunk.transform.position.x == x && chunk.transform.position.z == z) return true;
-        }
-        return false;
+        bool output = false;
+        bool doesExist = loadedChunks.TryGetValue(new Vector2Int(x, z), out output);
+        if(!doesExist) return false;
+        return output;
     }
 
     void SpawnChunk(int x, int z)
     {
+        loadedChunks ??= new();
+        chunks ??= new();
+        Debug.Log("Trying to spawn chunk");
+        if(IsChunkLoaded(x, z))
+        {
+            Debug.LogWarning("Chunk already loaded!");
+            return;
+        }
+        Debug.Log("Spawning");
+        
+        loadedChunks ??= new();    
         Vector3 offset = new(x, 0, z);
         offset *= chunkSize;
         GameObject generated = Instantiate(chunkPrefab,transform.position + offset, Quaternion.identity, transform);
@@ -119,6 +130,7 @@ public class ChunkGen : MonoBehaviour
         chunk.Generate();
         if(chunks == null) chunks = new();
         chunks.Add(generated);
+        loadedChunks[new Vector2Int(x, z)] = true;
     }
 
     void DestroyTooFar()
@@ -127,22 +139,41 @@ public class ChunkGen : MonoBehaviour
         GameObject[] chunksArr = chunks.ToArray();
         for(int i = 0; i < chunksCount; i++)
         {
+            // TODO calc only 2d distance
+            // calc is short for calculate btw
             GameObject chunk = chunksArr[i];
+            
             Vector3 toChunk = chunk.transform.position - player.transform.position;
+            toChunk.y = 0;
             // Debug.DrawRay(player.position, toChunk);
             float maximumDistance = (mapLength * chunkSize * 4f);
 
             if(toChunk.sqrMagnitude > maximumDistance * maximumDistance)
             {
                 // chunk out of bounds, destroying
-                Destroy(chunk);
-                chunks.Remove(chunk);
+                UnloadChunk(chunk);
             }
         }
     }
+
+    void UnloadChunk(GameObject chunk)
+    {
+        // convert to grid pos int x, int z
+        Vector2Int gridPos;
+        posToChunkPos(chunk.transform.position, out gridPos);
+
+        // update list
+        chunks.Remove(chunk);    
+        // update dict
+        loadedChunks.Remove(gridPos);
+        loadedChunks.Add(gridPos, false);
+        // destroy
+        Destroy(chunk);
+
+    }
     public void Generate()
     {
-        DestroyAllChildren();
+        // DestroyAllChildren();
         seed = Random.Range(0, 100000);
         float starTime = Time.time;
         
@@ -181,6 +212,11 @@ public class ChunkGen : MonoBehaviour
             }
         }
 
+        chunks ??= new();
+        loadedChunks ??= new();
+
+        chunks.Clear();
+        loadedChunks.Clear();
         
     }
 
