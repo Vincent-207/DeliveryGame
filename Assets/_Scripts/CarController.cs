@@ -39,7 +39,7 @@ public class CarController : MonoBehaviour
         GetInputs();
         AnimateWheels();
     }
-    private void LateUpdate()
+    private void FixedUpdate()
     {
         Move();
         Steer();
@@ -70,7 +70,7 @@ public class CarController : MonoBehaviour
     {
         foreach(var wheel in wheels)
         {
-            wheel.wheelCollider.motorTorque = input.y * maxAccel * Time.deltaTime;
+            wheel.wheelCollider.motorTorque = input.y * maxAccel * Time.fixedDeltaTime;
 
         }
     }

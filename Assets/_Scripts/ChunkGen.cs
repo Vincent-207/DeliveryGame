@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Xml.Serialization;
+using Mono.Cecil.Cil;
 using UnityEngine;
 
 public class ChunkGen : MonoBehaviour
@@ -14,6 +15,7 @@ public class ChunkGen : MonoBehaviour
     public float spawnRadius;
     List<GameObject> chunks;
     Vector3 previousPos;
+    public Material debugMat;
     Dictionary<Vector2Int, bool> loadedChunks;
     void Awake()
     {
@@ -32,8 +34,8 @@ public class ChunkGen : MonoBehaviour
         // Destroy chunks that are too far.
         // DestroyTooFar();
         // Spawn chunks that aren't close enough.
-        // SpawnNewChunks();
-        Generate();
+        SpawnNewChunks();
+        // Generate();
         DestroyTooFar();
         previousPos = player.position;
     }
@@ -46,17 +48,34 @@ public class ChunkGen : MonoBehaviour
         Debug.DrawLine(player.position, previousChunk, Color.red);
 
         // If player is in new chunk.
-        if(previousChunk != playerChunk)
+        bool inNewChunk = (previousChunk != playerChunk);
+        if(true)
         {
             Vector3Int toGenDirection = playerChunk - previousChunk;
             toGenDirection /= 10;
-            Debug.Log("New chunk! " + toGenDirection);
+            // Debug.Log("New chunk! " + toGenDirection);
+            
             Vector3 playerRelativeToGridPos = transform.position - player.position;
             Vector3Int playerGridPos = posToChunkPos(playerRelativeToGridPos);
             playerGridPos /= -10; 
-            Vector3Int toGen = playerGridPos + toGenDirection * (mapLength/2);
+            // if(toGenDirection.x != 0) 
+            // {
+            //     Vector3Int input = (playerGridPos + new Vector3Int(toGenDirection.x, 0, 0) * (mapLength/2));
+            //     GenerateChunkRow(input, 0);
+            // }
+            // if(toGenDirection.z != 0)
+            // {
+            //     Vector3Int input = (playerGridPos + new Vector3Int(0, 0, toGenDirection.z) * (mapLength/2));
+            //     GenerateChunkRow(input, 2);
+                
+            // } 
+            GenerateChunkRow( playerGridPos + Vector3Int.right * (mapLength/2));
+            GenerateChunkRow( playerGridPos + Vector3Int.left * (mapLength/2));
+            GenerateChunkRow( playerGridPos + Vector3Int.forward * (mapLength/2));
+            GenerateChunkRow( playerGridPos + Vector3Int.back * (mapLength/2));
+            // Vector3Int toGen = playerGridPos + toGenDirection * (mapLength/2);
             // toGen *= mapLength;
-            GenerateChunkRow(toGen.x, toGen.z);
+            // GenerateChunkRow(toGen.x, toGen.z);
             // TODO ONLY SPAWN WHEN CHUNKS ARE UNLOADED
             
             // Get offset
@@ -70,13 +89,18 @@ public class ChunkGen : MonoBehaviour
         // Draw ray to current chunk.
     }
 
-    public void GenerateChunkRow(int x, int z)
+
+    public void GenerateChunkRow(Vector3Int input)
     {
+        GameObject chunk = SpawnChunk(input.x, input.z);
+        if(chunk != null) chunk.GetComponent<MeshRenderer>().material = debugMat;
         for(int i = 0; i < mapLength; i++)
         {
+            
             // Spawn from left to right
-            SpawnChunk(x - mapLength/2 + i, z);
-            SpawnChunk(x, z - mapLength/2 + i);
+            
+            SpawnChunk(input.x - mapLength/2 + i, input.z);
+            SpawnChunk(input.x, input.z - mapLength/2 + i);
             // spawn from bottom to top
 
 
@@ -108,17 +132,17 @@ public class ChunkGen : MonoBehaviour
         return output;
     }
 
-    void SpawnChunk(int x, int z)
+    GameObject SpawnChunk(int x, int z)
     {
         loadedChunks ??= new();
         chunks ??= new();
-        Debug.Log("Trying to spawn chunk");
+        // Debug.Log("Trying to spawn chunk");
         if(IsChunkLoaded(x, z))
         {
-            Debug.LogWarning("Chunk already loaded!");
-            return;
+            // Debug.LogWarning("Chunk already loaded!");
+            return null;
         }
-        Debug.Log("Spawning");
+        // Debug.Log("Spawning");
         
         loadedChunks ??= new();    
         Vector3 offset = new(x, 0, z);
@@ -132,6 +156,9 @@ public class ChunkGen : MonoBehaviour
         if(chunks == null) chunks = new();
         chunks.Add(generated);
         loadedChunks[new Vector2Int(x, z)] = true;
+        return generated;
+
+
     }
 
     void DestroyTooFar()
