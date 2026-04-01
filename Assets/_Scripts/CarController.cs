@@ -27,7 +27,6 @@ public class CarController : MonoBehaviour
     private Rigidbody carRB;
     public InputActionReference move;
     public float turnSensitivity = 1f, maxSteerAngle =30f;
-
     void Start()
     {
         carRB = GetComponent<Rigidbody>();
