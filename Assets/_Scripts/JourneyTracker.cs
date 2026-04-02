@@ -10,6 +10,16 @@ public class JourneyTracker : MonoBehaviour
     AudioSource audioSource;
     [SerializeField]
     AudioClip collisionSFX;
+    public void EnableJourney()
+    {
+        timeTraveled = 0;
+        isInProgress = true;
+    }
+    public void DisableJourney()
+    {
+        isInProgress = false;
+    }
+
     void Awake()
     {
         if(instance != null && instance != this)

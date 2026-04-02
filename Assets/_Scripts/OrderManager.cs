@@ -24,6 +24,7 @@ public class OrderManager : MonoBehaviour
 
     public void SpawnOrder()
     {
+        JourneyTracker.instance.EnableJourney();
         Vector2 random = Random.insideUnitCircle * spawnRange;
         Vector2 flatPos2 = new(transform.position.x, transform.position.z);
         Vector3 spawnPos = new(random.x, noiseGen.GetNoiseAtPos(flatPos2+ random), random.y);
@@ -41,7 +42,7 @@ public class OrderManager : MonoBehaviour
     {
         // Pause game
         Time.timeScale = 0;
-        
+        JourneyTracker.instance.DisableJourney();
         // Get delivery quality info
         float timeTraveled = JourneyTracker.instance.GetTime();
         float weightCarried = JourneyTracker.instance.GetWeight();

@@ -60,8 +60,12 @@ public class OrderMenu : MonoBehaviour
     String floatToTime(float input)
     {
         int minutes  = (int) input/60;
+        String minutesText  = minutes.ToString("D2");
         float secondsAndLess = input - minutes * 60;
-        String output = "" + minutes + ":" + secondsAndLess;
+        int seconds = (int) secondsAndLess;
+        String secondsText = seconds.ToString("D2");
+        String lessThanSeconds = "" + (secondsAndLess - seconds);
+        String output = "" + minutesText + ":" + secondsText;
         return output;
     }
 

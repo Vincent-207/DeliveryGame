@@ -1,7 +1,7 @@
-using System.Collections;
+// using System.Collections;
 using System.Collections.Generic;
-using System.Xml.Serialization;
-using Mono.Cecil.Cil;
+// using System.Xml.Serialization;
+// using Mono.Cecil.Cil;
 using UnityEngine;
 
 public class ChunkGen : MonoBehaviour
@@ -15,7 +15,7 @@ public class ChunkGen : MonoBehaviour
     public float spawnRadius;
     List<GameObject> chunks;
     Vector3 previousPos;
-    public Material debugMat;
+    // public Material debugMat;
     Dictionary<Vector2Int, bool> loadedChunks;
     void Awake()
     {
@@ -92,8 +92,8 @@ public class ChunkGen : MonoBehaviour
 
     public void GenerateChunkRow(Vector3Int input)
     {
-        GameObject chunk = SpawnChunk(input.x, input.z);
-        if(chunk != null) chunk.GetComponent<MeshRenderer>().material = debugMat;
+        // GameObject chunk = SpawnChunk(input.x, input.z);
+        // if(chunk != null) chunk.GetComponent<MeshRenderer>().material = debugMat;
         for(int i = 0; i < mapLength; i++)
         {
             
